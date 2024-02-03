@@ -1,4 +1,5 @@
 ﻿using HospitalDbAutoFill.Database;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System;
 using System.Runtime.ExceptionServices;
 
@@ -6,13 +7,20 @@ Random random = new Random();
 
 string[] digits = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 
+static string GenerateRandomNumber(int length, Random random, string[] digits)
+{
+    return string.Join(string.Empty, Enumerable.Repeat(digits, length).Select(a => a[random.Next(a.Length)]));
+}
+
+static DateTime GenerateRandomDate(int startYear, int endYear, int endMonth, int endDay, Random random)
+{
+    return new DateTime(random.Next(startYear, endYear + 1), random.Next(1, endMonth + 1), random.Next(1, endDay + 1));
+}
+
 static void InsertRandomPatient(HospitalContext dbContext, Random random, string[] digits)
 {
-    string randomMedicalCardNumber = new string(digits[random.Next(digits.Length)]) + new string(digits[random.Next(digits.Length)]) + new string(digits[random.Next(digits.Length)]) +
-                               new string(digits[random.Next(digits.Length)]) + new string(digits[random.Next(digits.Length)]) + new string(digits[random.Next(digits.Length)]) +
-                               new string(digits[random.Next(digits.Length)]);
-
-    DateTime randomMedicalcardDateOfIssue = new DateTime(random.Next(2025, 2036), random.Next(1, 13), random.Next(1, 29));
+    string randomMedicalCardNumber = GenerateRandomNumber(7, random, digits);
+    DateTime randomMedicalcardDateOfIssue = GenerateRandomDate(2025, 2036, 12, 29, random);
     string formattedMedicalCardDateOfIssue = randomMedicalcardDateOfIssue.ToString("dd.MM.yyyy");
 
     MedicalCard medicalCard = new MedicalCard
@@ -24,14 +32,8 @@ static void InsertRandomPatient(HospitalContext dbContext, Random random, string
     dbContext.SaveChanges();
     Console.WriteLine($"Inserted new medical card");
 
-    string randomInsuranceNumber = new string(digits[random.Next(digits.Length)]) + new string(digits[random.Next(digits.Length)]) + new string(digits[random.Next(digits.Length)]) +
-                           new string(digits[random.Next(digits.Length)]) + new string(digits[random.Next(digits.Length)]) + new string(digits[random.Next(digits.Length)]) +
-                           new string(digits[random.Next(digits.Length)]) + new string(digits[random.Next(digits.Length)]) + new string(digits[random.Next(digits.Length)]) +
-                           new string(digits[random.Next(digits.Length)]) + new string(digits[random.Next(digits.Length)]) + new string(digits[random.Next(digits.Length)]) +
-                           new string(digits[random.Next(digits.Length)]) + new string(digits[random.Next(digits.Length)]) + new string(digits[random.Next(digits.Length)]) +
-                           new string(digits[random.Next(digits.Length)]);
-
-    DateTime randomInsuranceExpiringDate = new DateTime(random.Next(2025, 2036), random.Next(1, 13), random.Next(1, 29));
+    string randomInsuranceNumber = GenerateRandomNumber(16, random, digits);
+    DateTime randomInsuranceExpiringDate = GenerateRandomDate(2025, 2036, 12, 29, random);
     string formattedInsuranceExpiringDate = randomInsuranceExpiringDate.ToString("dd.MM.yyyy");
 
     Insurance insurance = new Insurance
@@ -76,12 +78,9 @@ static void InsertRandomPatient(HospitalContext dbContext, Random random, string
         randomPatronymic = femalePatronymics[random.Next(femalePatronymics.Length)];
     }
 
-    string randomPassport = new string(digits[random.Next(digits.Length)]) + new string(digits[random.Next(digits.Length)]) + new string(digits[random.Next(digits.Length)]) +
-                               new string(digits[random.Next(digits.Length)]) + new string(digits[random.Next(digits.Length)]) + new string(digits[random.Next(digits.Length)]) +
-                               new string(digits[random.Next(digits.Length)]) + new string(digits[random.Next(digits.Length)]) + new string(digits[random.Next(digits.Length)]) +
-                               new string(digits[random.Next(digits.Length)]) + new string(digits[random.Next(digits.Length)]);
+    string randomPassport = GenerateRandomNumber(10, random, digits);
 
-    DateTime randomBirthdate = new DateTime(random.Next(1950, 2007), random.Next(1, 13), random.Next(1, 29));
+    DateTime randomBirthdate = GenerateRandomDate(1950, 2007, 12, 29, random);
     string formattedBirthdate = randomBirthdate.ToString("dd.MM.yyyy");
 
     string randomCity = cities[random.Next(cities.Length)];
@@ -89,22 +88,20 @@ static void InsertRandomPatient(HospitalContext dbContext, Random random, string
     int randomHouse = random.Next(1, 100);
     int randomApartment = random.Next(1, 100);
 
-    string randomPhoneNumber = "+" + "7" + new string(digits[random.Next(digits.Length)]) + new string(digits[random.Next(digits.Length)]) + new string(digits[random.Next(digits.Length)]) +
-                               new string(digits[random.Next(digits.Length)]) + new string(digits[random.Next(digits.Length)]) + new string(digits[random.Next(digits.Length)]) +
-                               new string(digits[random.Next(digits.Length)]) + new string(digits[random.Next(digits.Length)]) + new string(digits[random.Next(digits.Length)]);
+    string randomPhoneNumber = "+" + "7" + GenerateRandomNumber(9, random, digits);
 
     string randomEmailDomain = random.Next(2) == 0 ? "gmail.com" : (random.Next(2) == 0 ? "yandex.com" : "mail.ru");
     int randomEmailLength = random.Next(5, 15);
     string randomEmailLocalPart = new string(Enumerable.Repeat('a', randomEmailLength).Select(c => (char)random.Next(97, 123)).ToArray());
     string randomEmail = randomEmailLocalPart + randomEmailDomain;
 
-    DateTime randomLastAppointment = new DateTime(2023, random.Next(1, 13), random.Next(1, 29));
+    DateTime randomLastAppointment = GenerateRandomDate(2023, 2023, 12, 29, random);
     string formattedLastAppointment = randomLastAppointment.ToString("dd.MM.yyyy");
 
     DateTime randomNextAppointment = new DateTime(1900, 01, 01);
     while (randomLastAppointment > randomNextAppointment)
     {
-        randomNextAppointment = new DateTime(2024, random.Next(1, 13), random.Next(1, 29));
+        randomNextAppointment = GenerateRandomDate(2025, 2025, 12, 29, random);
     }
     string formattedNextAppointment = randomNextAppointment.ToString("dd.MM.yyyy");
 
@@ -137,9 +134,36 @@ static void InsertRandomPatient(HospitalContext dbContext, Random random, string
     Console.WriteLine($"Inserted new patient");
 }
 
-static void InsertRandomHospitalization(HospitalContext dbContext)
+static void InsertRandomHospitalization(HospitalContext dbContext, Random random)
 {
+    string[] hospitalizationTypes = { "Planned", "Emergency", "Elective" };
+    string[] results = { "Positive", "Negative", "Inconclusive" };
+    string[] recommendations = { "Take this medicine", "Avoid heavy lifting", "Follow up with your doctor" };
 
+    int randomPatientId = random.Next(1, 101);
+
+    DateTime randomHospitalizationDate = GenerateRandomDate(2022, 2024, 12, 29, random);
+    string formattedHospitalizationDate = randomHospitalizationDate.ToString("dd.MM.yyyy");
+
+    int randomDoctorId = random.Next(1, 11);
+    string randomHospitalizationType = hospitalizationTypes[random.Next(hospitalizationTypes.Length)];
+    int randomProcedureId = random.Next(1, 11);
+    string randomResult = results[random.Next(results.Length)];
+    string randomRecommendation = recommendations[random.Next(recommendations.Length)];
+
+    Hospitalization hospitalization = new Hospitalization
+    {
+        PatientId = randomPatientId,
+        HospitalizationDate = formattedHospitalizationDate,
+        DoctorId = randomDoctorId,
+        HospitalizationType = randomHospitalizationType,
+        ProcedureId = randomProcedureId,
+        Result = randomResult,
+        Recommendations = randomRecommendation,
+    };
+    dbContext.Hospitalizations.Add(hospitalization);
+    dbContext.SaveChanges();
+    Console.WriteLine($"Inserted new hospitalization");
 }
 
 static void Main(string[] args, Random random, string[] digits)
@@ -150,7 +174,7 @@ static void Main(string[] args, Random random, string[] digits)
         {
             InsertRandomPatient(dbContext, random, digits);
             Console.WriteLine();
-            InsertRandomHospitalization(dbContext);
+            InsertRandomHospitalization(dbContext, random);
         }
     }
 
