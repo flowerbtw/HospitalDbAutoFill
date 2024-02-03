@@ -5,7 +5,7 @@ namespace HospitalDbAutoFill.Database;
 
 public partial class MedicalCard
 {
-    public string MedicalCard1 { get; set; } = null!;
+    public string MedicalCardNumber { get; set; } = null!;
 
     public string? MedicalCardDateOfIssue { get; set; }
 

@@ -5,7 +5,7 @@ namespace HospitalDbAutoFill.Database;
 
 public partial class Insurance
 {
-    public string Insurance1 { get; set; } = null!;
+    public string InsuranceNumber { get; set; } = null!;
 
     public string? InsuranceExpiringDate { get; set; }
 

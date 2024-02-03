@@ -13,11 +13,13 @@ public partial class Patient
 
     public string? Patronymic { get; set; }
 
+    public string? Photo { get; set; }
+
     public string? Passport { get; set; }
 
     public string? Birthdate { get; set; }
 
-    public string? Sex { get; set; }
+    public string? Gender { get; set; }
 
     public string? Country { get; set; }
 
@@ -25,21 +27,21 @@ public partial class Patient
 
     public string? Street { get; set; }
 
-    public string? House { get; set; }
+    public int? House { get; set; }
 
-    public string? Apartment { get; set; }
+    public int? Apartment { get; set; }
 
     public string? PhoneNumber { get; set; }
 
     public string? Email { get; set; }
 
-    public string? MedicalCard { get; set; }
+    public string? MedicalCardNumber { get; set; }
 
     public string? LastAppointment { get; set; }
 
     public string? NextAppointment { get; set; }
 
-    public string? Insurance { get; set; }
+    public string? InsuranceNumber { get; set; }
 
     public string? Diagnosis { get; set; }
 
