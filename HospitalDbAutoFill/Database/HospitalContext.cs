@@ -51,18 +51,14 @@ public partial class HospitalContext : DbContext
 
         modelBuilder.Entity<Insurance>(entity =>
         {
-            entity.HasKey(e => e.Insurance1);
+            entity.HasKey(e => e.InsuranceNumber);
 
             entity.ToTable("Insurance");
-
-            entity.Property(e => e.Insurance1).HasColumnName("Insurance");
         });
 
         modelBuilder.Entity<MedicalCard>(entity =>
         {
-            entity.HasKey(e => e.MedicalCard1);
-
-            entity.Property(e => e.MedicalCard1).HasColumnName("MedicalCard");
+            entity.HasKey(e => e.MedicalCardNumber);
         });
 
         modelBuilder.Entity<MedicalProcedure>(entity =>
@@ -78,9 +74,9 @@ public partial class HospitalContext : DbContext
         {
             entity.HasIndex(e => e.Email, "IX_Patients_Email").IsUnique();
 
-            entity.HasIndex(e => e.Insurance, "IX_Patients_Insurance").IsUnique();
+            entity.HasIndex(e => e.InsuranceNumber, "IX_Patients_InsuranceNumber").IsUnique();
 
-            entity.HasIndex(e => e.MedicalCard, "IX_Patients_MedicalCard").IsUnique();
+            entity.HasIndex(e => e.MedicalCardNumber, "IX_Patients_MedicalCardNumber").IsUnique();
 
             entity.HasIndex(e => e.Passport, "IX_Patients_Passport").IsUnique();
 
@@ -88,9 +84,7 @@ public partial class HospitalContext : DbContext
 
             entity.Property(e => e.PatientId).ValueGeneratedNever();
 
-            entity.HasOne(d => d.InsuranceNavigation).WithOne(p => p.Patient).HasForeignKey<Patient>(d => d.Insurance);
-
-            entity.HasOne(d => d.MedicalCardNavigation).WithOne(p => p.Patient).HasForeignKey<Patient>(d => d.MedicalCard);
+            entity.HasOne(d => d.InsuranceNumberNavigation).WithOne(p => p.Patient).HasForeignKey<Patient>(d => d.InsuranceNumber);
         });
 
         OnModelCreatingPartial(modelBuilder);

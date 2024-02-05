@@ -27,9 +27,9 @@ public partial class Patient
 
     public string? Street { get; set; }
 
-    public int? House { get; set; }
+    public long? House { get; set; }
 
-    public int? Apartment { get; set; }
+    public long? Apartment { get; set; }
 
     public string? PhoneNumber { get; set; }
 
@@ -49,7 +49,5 @@ public partial class Patient
 
     public virtual ICollection<Hospitalization> Hospitalizations { get; set; } = new List<Hospitalization>();
 
-    public virtual Insurance? InsuranceNavigation { get; set; }
-
-    public virtual MedicalCard? MedicalCardNavigation { get; set; }
+    public virtual Insurance? InsuranceNumberNavigation { get; set; }
 }
