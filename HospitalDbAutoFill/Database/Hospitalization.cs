@@ -11,8 +11,6 @@ public partial class Hospitalization
 
     public string? HospitalizationDate { get; set; }
 
-    public long? DoctorId { get; set; }
-
     public string? HospitalizationType { get; set; }
 
     public long? ProcedureId { get; set; }
@@ -20,8 +18,6 @@ public partial class Hospitalization
     public string? HospitalizationResults { get; set; }
 
     public string? HospitalizationRecommendations { get; set; }
-
-    public virtual Doctor? Doctor { get; set; }
 
     public virtual Patient? Patient { get; set; }
 
