@@ -8,4 +8,6 @@ public partial class MedicalCard
     public string MedicalCardNumber { get; set; } = null!;
 
     public string? MedicalCardDateOfIssue { get; set; }
+
+    public virtual Patient? Patient { get; set; }
 }

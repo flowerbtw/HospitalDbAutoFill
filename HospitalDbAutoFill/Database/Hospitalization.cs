@@ -17,9 +17,9 @@ public partial class Hospitalization
 
     public long? ProcedureId { get; set; }
 
-    public string? Result { get; set; }
+    public string? HospitalizationResults { get; set; }
 
-    public string? Recommendations { get; set; }
+    public string? HospitalizationRecommendations { get; set; }
 
     public virtual Doctor? Doctor { get; set; }
 

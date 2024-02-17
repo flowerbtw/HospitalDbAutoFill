@@ -12,4 +12,6 @@ public partial class Doctor
     public string Password { get; set; } = null!;
 
     public virtual ICollection<Hospitalization> Hospitalizations { get; set; } = new List<Hospitalization>();
+
+    public virtual ICollection<MedicalProcedure> MedicalProcedures { get; set; } = new List<MedicalProcedure>();
 }

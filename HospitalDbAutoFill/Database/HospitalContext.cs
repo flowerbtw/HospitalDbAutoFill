@@ -25,22 +25,31 @@ public partial class HospitalContext : DbContext
 
     public virtual DbSet<MedicalProcedure> MedicalProcedures { get; set; }
 
+    public virtual DbSet<MedicalProceduresName> MedicalProceduresNames { get; set; }
+
+    public virtual DbSet<MedicalProceduresType> MedicalProceduresTypes { get; set; }
+
     public virtual DbSet<Patient> Patients { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlite("Data Source = E:\\Development\\Microsoft Visual Studio\\WordSkills 2024\\Hospital\\Hospital\\bin\\Debug\\net7.0-windows\\Hospital.db");
+    {
+        optionsBuilder.UseSqlite("Data Source = E:\\Development\\Microsoft Visual Studio\\WordSkills 2024\\HospitalDbAutoFill\\HospitalDbAutoFill\\bin\\Debug\\net7.0\\Hospital.db");
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Doctor>(entity =>
         {
-            entity.Property(e => e.DoctorId).ValueGeneratedNever();
+            entity.HasIndex(e => e.Login, "IX_Doctors_Login").IsUnique();
         });
 
         modelBuilder.Entity<Hospitalization>(entity =>
         {
-            entity.Property(e => e.HospitalizationId).ValueGeneratedNever();
+            entity.HasIndex(e => e.DoctorId, "IX_Hospitalizations_DoctorId");
+
+            entity.HasIndex(e => e.PatientId, "IX_Hospitalizations_PatientId");
+
+            entity.HasIndex(e => e.ProcedureId, "IX_Hospitalizations_ProcedureId");
 
             entity.HasOne(d => d.Doctor).WithMany(p => p.Hospitalizations).HasForeignKey(d => d.DoctorId);
 
@@ -65,9 +74,33 @@ public partial class HospitalContext : DbContext
         {
             entity.HasKey(e => e.ProcedureId);
 
-            entity.HasIndex(e => e.ProcedureName, "IX_MedicalProcedures_ProcedureName").IsUnique();
+            entity.HasIndex(e => e.DoctorId, "IX_MedicalProcedures_DoctorId");
 
-            entity.Property(e => e.ProcedureId).ValueGeneratedNever();
+            entity.HasIndex(e => e.PatientId, "IX_MedicalProcedures_PatientId");
+
+            entity.HasIndex(e => e.ProcedureNameId, "IX_MedicalProcedures_ProcedureNameId");
+
+            entity.HasOne(d => d.Doctor).WithMany(p => p.MedicalProcedures).HasForeignKey(d => d.DoctorId);
+
+            entity.HasOne(d => d.Patient).WithMany(p => p.MedicalProcedures).HasForeignKey(d => d.PatientId);
+
+            entity.HasOne(d => d.ProcedureName).WithMany(p => p.MedicalProcedures).HasForeignKey(d => d.ProcedureNameId);
+        });
+
+        modelBuilder.Entity<MedicalProceduresName>(entity =>
+        {
+            entity.HasKey(e => e.ProcedureNameId);
+
+            entity.HasIndex(e => e.ProcedureName, "IX_MedicalProceduresNames_ProcedureName").IsUnique();
+
+            entity.HasIndex(e => e.ProcedureTypeId, "IX_MedicalProceduresNames_ProcedureTypeId");
+
+            entity.HasOne(d => d.ProcedureType).WithMany(p => p.MedicalProceduresNames).HasForeignKey(d => d.ProcedureTypeId);
+        });
+
+        modelBuilder.Entity<MedicalProceduresType>(entity =>
+        {
+            entity.HasKey(e => e.ProcedureTypeId);
         });
 
         modelBuilder.Entity<Patient>(entity =>
@@ -82,9 +115,11 @@ public partial class HospitalContext : DbContext
 
             entity.HasIndex(e => e.PhoneNumber, "IX_Patients_PhoneNumber").IsUnique();
 
-            entity.Property(e => e.PatientId).ValueGeneratedNever();
+            entity.HasIndex(e => e.Photo, "IX_Patients_Photo").IsUnique();
 
             entity.HasOne(d => d.InsuranceNumberNavigation).WithOne(p => p.Patient).HasForeignKey<Patient>(d => d.InsuranceNumber);
+
+            entity.HasOne(d => d.MedicalCardNumberNavigation).WithOne(p => p.Patient).HasForeignKey<Patient>(d => d.MedicalCardNumber);
         });
 
         OnModelCreatingPartial(modelBuilder);

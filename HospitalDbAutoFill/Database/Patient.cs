@@ -50,4 +50,8 @@ public partial class Patient
     public virtual ICollection<Hospitalization> Hospitalizations { get; set; } = new List<Hospitalization>();
 
     public virtual Insurance? InsuranceNumberNavigation { get; set; }
+
+    public virtual MedicalCard? MedicalCardNumberNavigation { get; set; }
+
+    public virtual ICollection<MedicalProcedure> MedicalProcedures { get; set; } = new List<MedicalProcedure>();
 }
